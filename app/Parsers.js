@@ -54,7 +54,7 @@ const parseDescription = (makes, cb) => {
     });
 
     // setup CLI loader
-    const cliBar = new clip.Bar({}, clip.Presets.shades_classic);
+    const cliBar = new clip.Bar({}, clip.Presets.legacy);
     cliBar.start(makes.length, 0);
     let counter = 0;
 
