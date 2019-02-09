@@ -15,7 +15,6 @@ const requester = (path, body) => {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'X-Requested-With': 'XMLHttpRequest'
         },
-        proxy: global.proxyInstance.pop(),
         body: qs.stringify(body)
       };
 
