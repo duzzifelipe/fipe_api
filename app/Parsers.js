@@ -23,7 +23,7 @@ const parseMakes = cb => {
 
     // close writter and callback
     fw.close();
-    cb(null, makes.slice(0, 2));
+    cb(null, makes);
   })();
 };
 

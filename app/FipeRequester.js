@@ -1,28 +1,33 @@
 const request = require('request');
-const qs = require('querystring')
+const qs = require('querystring');
 
 const requester = (path, body) => {
-  const options = {
-    url: `https://veiculos.fipe.org.br/api/veiculos/${path}`,
-    method: 'POST',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0',
-      'Accept': 'application/json, text/javascript, */*; q=0.01',
-      'Referer': 'https://veiculos.fipe.org.br/',
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    body: qs.stringify(body)
-  };
-
   return new Promise((resolve, reject) => {
-    request(options, (e, r, b) => {
-      if (e) {
-        reject(e);
-      } else {
-        resolve(JSON.parse(b));
-      }
-    });
+    (async () => {
+      // configure current request
+      const options = {
+        url: `https://veiculos.fipe.org.br/api/veiculos/${path}`,
+        method: 'POST',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:64.0) Gecko/20100101 Firefox/64.0',
+          'Accept': 'application/json, text/javascript, */*; q=0.01',
+          'Referer': 'https://veiculos.fipe.org.br/',
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        proxy: global.proxyInstance.pop(),
+        body: qs.stringify(body)
+      };
+
+      // send the request
+      request(options, (e, r, b) => {
+        if (e) {
+          reject(e);
+        } else {
+          resolve(JSON.parse(b));
+        }
+      });
+    })();
   });
 };
 
