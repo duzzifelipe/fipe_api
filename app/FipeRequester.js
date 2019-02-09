@@ -1,5 +1,6 @@
 const request = require('request');
 const qs = require('querystring');
+const { parsePrice } = require('./Helpers');
 
 const requester = (path, body) => {
   return new Promise((resolve, reject) => {
@@ -40,7 +41,7 @@ module.exports.getMakes = async () => {
   return result.map(item => ({ id: parseInt(item.Value), name: item.Label }));
 };
 
-module.exports.getModels = async (makeId, cb) => {
+module.exports.getModels = async (makeId) => {
   const body = {
     codigoTipoVeiculo: 1,
     codigoTabelaReferencia: 238,
@@ -59,7 +60,7 @@ module.exports.getModels = async (makeId, cb) => {
   }));
 };
 
-module.exports.getYears = async (makeId, modelId, cb) => {
+module.exports.getYears = async (makeId, modelId) => {
   const body = {
     codigoTipoVeiculo: 1,
     codigoTabelaReferencia: 238,
@@ -85,7 +86,7 @@ module.exports.getYears = async (makeId, modelId, cb) => {
   });
 };
 
-module.exports.getDescription = async (makeId, modelId, year, fuelId, cb) => {
+module.exports.getDescription = async (makeId, modelId, year, fuelId) => {
   const body = {
     codigoTipoVeiculo: 1,
     codigoTabelaReferencia: 238,
@@ -112,8 +113,4 @@ module.exports.getDescription = async (makeId, modelId, year, fuelId, cb) => {
     vehicleType: result.TipoVeiculo,
     price: parsePrice(result.Valor),
   };
-};
-
-const parsePrice = str => {
-  return parseFloat(str.replace(/\D+/g, '')) / 100.0;
 };

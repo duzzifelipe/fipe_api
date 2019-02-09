@@ -4,3 +4,8 @@ module.exports.asyncForEach = async (array, callback) => {
     await callback(array[index], index, array);
   }
 };
+
+// BRL format to float
+module.exports.parsePrice = str => {
+  return parseFloat(str.replace(/\D+/g, '')) / 100.0;
+};
