@@ -1,3 +1,4 @@
+const clip = require('cli-progress');
 const { getMakes, getModels, getYears, getDescription } = require('./FipeRequester');
 const { asyncForEach } = require('./Helpers');
 const FileWriter = require('./FileWriter');
@@ -22,7 +23,7 @@ const parseMakes = cb => {
 
     // close writter and callback
     fw.close();
-    cb(null, makes);
+    cb(null, makes.slice(0, 2));
   })();
 };
 
@@ -52,6 +53,11 @@ const parseDescription = (makes, cb) => {
       11: 'price'
     });
 
+    // setup CLI loader
+    const cliBar = new clip.Bar({}, clip.Presets.shades_classic);
+    cliBar.start(makes.length, 0);
+    let counter = 0;
+
     // loop over makes
     await asyncForEach(makes, async make => {
       const models = await getModels(make.id);
@@ -65,9 +71,14 @@ const parseDescription = (makes, cb) => {
           fw.append(description);
         });
       });
+
+      // update the bar
+      counter++;
+      cliBar.update(counter);
     });
 
     // finalize it
+    cliBar.stop();
     fw.close();
     cb(null, 'FINISHED!');
   })();
