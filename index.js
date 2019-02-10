@@ -8,12 +8,18 @@ console.log('Starting...');
 // after retrieving each car information
 async.waterfall([
   (cb) => {
-    console.log('... Setting up Tor link ...');
-    TorAgent.create().then(agent => {
-      global.agent = agent;
-      console.log('Done!');
+    if (process.env.DISABLE_TOR) {
+      console.log('... Skipping Tor config ...');
       cb(null);
-    });
+      
+    } else {
+      console.log('... Setting up Tor link ...');
+      TorAgent.create().then(agent => {
+        global.agent = agent;
+        console.log('Done!');
+        cb(null);
+      });
+    }
   },
   (cb) => {
     console.log('... Getting makes ...');
