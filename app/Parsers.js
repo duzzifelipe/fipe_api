@@ -1,6 +1,6 @@
 const clip = require('cli-progress');
 const { getMakes, getModels, getYears, getDescription } = require('./FipeRequester');
-const { asyncForEach } = require('./Helpers');
+const { asyncForEach, timeOut } = require('./Helpers');
 const FileWriter = require('./FileWriter');
 
 // get makes, append to a file
@@ -70,11 +70,15 @@ const parseDescription = (makes, cb) => {
           // put description on file
           fw.append(description);
         });
+
+        // set some delay between each model action
+        await timeOut(2000);
       });
 
       // update the bar
       counter++;
       cliBar.update(counter);
+      await timeOut(30000);
     });
 
     // finalize it
