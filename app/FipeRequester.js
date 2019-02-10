@@ -16,6 +16,7 @@ const requester = (path, body) => {
           'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
           'X-Requested-With': 'XMLHttpRequest'
         },
+        agent: process.env.DISABLE_TOR ? undefined : global.agent,
         body: qs.stringify(body)
       };
 
