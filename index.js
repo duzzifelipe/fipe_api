@@ -2,7 +2,7 @@ const async = require('async');
 const { parseMakes, parseDescription } = require('./app/Parsers');
 const TorAgent = require('toragent');
 
-console.log('Starting...');
+console.log(`Starting at [${Date.now()}]...`);
 
 // create a async handler for getting the makes and
 // after retrieving each car information
@@ -11,7 +11,7 @@ async.waterfall([
     if (process.env.DISABLE_TOR) {
       console.log('... Skipping Tor config ...');
       cb(null);
-      
+
     } else {
       console.log('... Setting up Tor link ...');
       TorAgent.create().then(agent => {
@@ -30,5 +30,5 @@ async.waterfall([
     parseDescription(makes, cb);
   }
 ], (error, result) => {
-  console.log(error || result);
+  console.log(error || result, ` at ${Date.now()}`);
 });
