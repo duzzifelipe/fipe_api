@@ -5,14 +5,6 @@ module.exports.asyncForEach = async (array, callback) => {
   }
 };
 
-// returns a array of `parallel` items on each run
-// for 3: [1, 2, 3], [4, 5, 6]...
-module.exports.asyncForEachMulti = async (array, parallel = 1, callback) => {
-  for (let index = 0; index < array.length; index += parallel) {
-    await callback(array.slice(index, index + parallel), index, array);
-  }
-};
-
 // BRL format to float
 module.exports.parsePrice = str => {
   return parseFloat(str.replace(/\D+/g, '')) / 100.0;
