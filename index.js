@@ -33,7 +33,16 @@ async.waterfall([
   },
   (makes, cb) => {
     console.log('... Starting Car\'s Description ...');
-    parseDescription(makes, cb);
+
+    if (process.env.LIMIT_BT && process.env.LIMIT_TP) {
+      const bt = parseInt(process.env.LIMIT_BT);
+      const tp = parseInt(process.env.LIMIT_TP);
+      console.log(`... From make ${bt} to ${tp} ...`);
+      parseDescription(makes.slice(bt, tp), cb);
+
+    } else {
+      parseDescription(makes, cb);
+    }
   }
 ], (error, result) => {
   console.log(error || result, ` at ${Date.now()}`);

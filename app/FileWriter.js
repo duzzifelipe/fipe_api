@@ -9,7 +9,9 @@ class FileWriter {
 
   open() {
     // creates a new file or truncate the existent
-    this._fd = fs.openSync(`./output/${this._fileName}.csv`, 'w');
+    const prefix = process.env.LIMIT_BT && process.env.LIMIT_TP ?
+      `${process.env.LIMIT_BT}_${process.env.LIMIT_TP}_` : '';
+    this._fd = fs.openSync(`./output/${prefix}${this._fileName}.csv`, 'w');
   }
 
   append(row) {
