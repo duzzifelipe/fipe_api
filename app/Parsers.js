@@ -1,5 +1,5 @@
 const { getMakes, getModels, getYears, getDescription } = require('./FipeRequester');
-const { asyncForEach } = require('./Helpers');
+const { asyncForEach, asyncForEachMulti } = require('./Helpers');
 
 // get makes, append to a file
 // and return it to the success callback
