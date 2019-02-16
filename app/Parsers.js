@@ -1,5 +1,5 @@
 const { getMakes, getModels, getYears, getDescription } = require('./FipeRequester');
-const { asyncForEach, timeOut } = require('./Helpers');
+const { asyncForEach } = require('./Helpers');
 
 // get makes, append to a file
 // and return it to the success callback
@@ -75,13 +75,11 @@ const parseDescription = (makes, cb) => {
         });
 
         // set some delay between each model action
-        await timeOut(1000);
         modelCount++;
       });
 
       // update the bar
       counter++;
-      await timeOut(5000);
     });
 
     // finalize it
