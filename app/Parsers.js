@@ -1,13 +1,12 @@
 const { getMakes, getModels, getYears, getDescription } = require('./FipeRequester');
 const { asyncForEach, timeOut } = require('./Helpers');
-const FileWriter = require('./FileWriter');
 
 // get makes, append to a file
 // and return it to the success callback
 const parseMakes = cb => {
   (async () => {
     const makes = await getMakes();
-    const fw = new FileWriter('makes');
+    const fw = global.fwMakes;
 
     // open the writter
     fw.open();
@@ -32,7 +31,7 @@ const parseMakes = cb => {
 const parseDescription = (makes, cb) => {
   (async () => {
     // write csv file
-    const fw = new FileWriter('models');
+    const fw = global.fwModels;
 
     // open the writter
     fw.open();

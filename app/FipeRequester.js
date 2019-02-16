@@ -1,23 +1,3 @@
-/**
- * 
- * 
- * 
- * 
- * 
- * 
- * REMOVE THAT PROGRESS AND JUST LOG A LINE WITH THE CONTENT
- * "GETTING CAR 1"
- * "GETTING MAKE 1"
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- */
 const request = require('request');
 const qs = require('querystring');
 const { parsePrice } = require('./Helpers');

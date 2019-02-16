@@ -1,6 +1,7 @@
 const async = require('async');
-const { parseMakes, parseDescription } = require('./app/Parsers');
 const TorAgent = require('toragent');
+const { parseMakes, parseDescription } = require('./app/Parsers');
+const FileWriter = require('./app/FileWriter');
 
 console.log(`Starting at [${Date.now()}]...`);
 
@@ -16,10 +17,15 @@ async.waterfall([
       console.log('... Setting up Tor link ...');
       TorAgent.create().then(agent => {
         global.agent = agent;
-        console.log('Done!');
         cb(null);
       });
     }
+  },
+  (cb) => {
+    console.log('... Opening File Writers ...');
+    global.fwMakes = new FileWriter('makes');
+    global.fwModels = new FileWriter('models');
+    cb(null);
   },
   (cb) => {
     console.log('... Getting makes ...');
@@ -31,4 +37,16 @@ async.waterfall([
   }
 ], (error, result) => {
   console.log(error || result, ` at ${Date.now()}`);
+});
+
+process.on('SIGINT', () => {
+  console.log('RECEIVED CLOSE SIGNAL');
+  try {
+    global.fwMakes.close();
+    global.fwModels.close();
+  } catch (e) {
+
+  }
+  console.log('FILES CLOSED');
+  process.exit();
 });
