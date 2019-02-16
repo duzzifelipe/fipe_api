@@ -1,6 +1,51 @@
+/**
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * REMOVE THAT PROGRESS AND JUST LOG A LINE WITH THE CONTENT
+ * "GETTING CAR 1"
+ * "GETTING MAKE 1"
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
 const request = require('request');
 const qs = require('querystring');
 const { parsePrice } = require('./Helpers');
+
+const requesterCall = (options, callStack, cb) => {
+  request(options, (e, r, b) => {
+    if (e) {
+      if (callStack <= 5 && !process.env.DISABLE_TOR) {
+        console.log(`Call stack is: ${callStack}/5, resetting Tor IP`);
+        // options.agent holds a tor instance
+        options.agent.rotateAddress()
+          .then(_ => {
+            console.log('Calling again with new Tor IP');
+            requesterCall(options, callStack + 1, cb);
+          })
+          .catch(e => cb(e));
+      
+      } else {
+        console.log('So much errors, finishing this stack...');
+        console.log(options);
+        cb(e);
+      }
+
+    } else {
+      cb(null, JSON.parse(b));
+    }
+  });
+};
 
 const requester = (path, body) => {
   return new Promise((resolve, reject) => {
@@ -21,11 +66,11 @@ const requester = (path, body) => {
       };
 
       // send the request
-      request(options, (e, r, b) => {
-        if (e) {
-          reject(e);
+      requesterCall(options, 1, (error, result) => {
+        if (error) {
+          reject(error);
         } else {
-          resolve(JSON.parse(b));
+          resolve(result);
         }
       });
     })();

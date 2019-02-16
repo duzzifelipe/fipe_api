@@ -1,4 +1,3 @@
-const clip = require('cli-progress');
 const { getMakes, getModels, getYears, getDescription } = require('./FipeRequester');
 const { asyncForEach, timeOut } = require('./Helpers');
 const FileWriter = require('./FileWriter');
@@ -53,36 +52,40 @@ const parseDescription = (makes, cb) => {
       11: 'price'
     });
 
-    // setup CLI loader
-    const cliBar = new clip.Bar({}, clip.Presets.legacy);
-    cliBar.start(makes.length, 0);
-    let counter = 0;
+    // makes count
+    let counter = 1;
 
     // loop over makes
     await asyncForEach(makes, async make => {
+      console.log(`--> [${counter}/${makes.length}] Loading models for make: ${make.name}`);
+
       const models = await getModels(make.id);
+      let modelCount = 1;
       // loop over models
       await asyncForEach(models, async model => {
+        console.log(`    -> [${modelCount}/${models.length}] Getting years for model ${model.name}`);
         const years = await getYears(model.makeId, model.id);
+        let yearCount = 1;
         // loop over years
         await asyncForEach(years, async year => {
+          console.log(`      -> [${yearCount}/${years.length}] Getting description for year ${year.year}`)
           const description = await getDescription(year.makeId, year.modelId, year.year, year.fuel);
           // put description on file
           fw.append(description);
+          yearCount++;
         });
 
         // set some delay between each model action
-        await timeOut(2000);
+        await timeOut(1000);
+        modelCount++;
       });
 
       // update the bar
       counter++;
-      cliBar.update(counter);
-      await timeOut(30000);
+      await timeOut(5000);
     });
 
     // finalize it
-    cliBar.stop();
     fw.close();
     cb(null, 'FINISHED!');
   })();
